@@ -2,12 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: efk-stack
+  namespace: default
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: default
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -23,12 +23,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kibana
-  namespace: efk-stack
+  namespace: default
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: default
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -44,12 +44,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: fluent
-  namespace: efk-stack
+  namespace: default
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: default
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -57,7 +57,7 @@ spec:
       selfHeal: true
   project: default
   source:
-    path: chart
+    path: charts
     repoURL: https://github.com/krupakar0307/fluentd.git
     targetRevision: HEAD
 
