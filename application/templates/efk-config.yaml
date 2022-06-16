@@ -2,12 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: test
+  namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: test
+    namespace: argocd
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -25,12 +25,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kibana
-  namespace: test
+  namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: test
+    namespace: argocd
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -48,12 +48,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: fluent
-  namespace: test
+  namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: test
+    namespace: argocd
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
