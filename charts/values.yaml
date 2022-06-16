@@ -5,11 +5,11 @@ fullnameOverride: ""
 kind: "DaemonSet"
 
 # # Only applicable for Deployment or StatefulSet
-replicaCount: 4
+# replicaCount: 1
 
 image:
   repository: "fluent/fluentd-kubernetes-daemonset"
-  pullPolicy: "IfNotPresent"
+  pullPolicy: "Always"
   tag: ""
 
 ## Optional array of imagePullSecrets containing private registry credentials
