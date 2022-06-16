@@ -9,7 +9,7 @@ kind: "DaemonSet"
 
 image:
   repository: "fluent/fluentd-kubernetes-daemonset"
-  pullPolicy: "Never"
+  pullPolicy: "ALways"
   tag: ""
 
 ## Optional array of imagePullSecrets containing private registry credentials
