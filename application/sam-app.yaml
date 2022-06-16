@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+
+kind: Application
+
+metadata:
+
+  name: samp
+
+  namespace: fluentd
+
+  finalizers:
+
+  - resources-finalizer.argocd.argoproj.io
+
+spec:
+
+  destination:
+
+    namespace: default
+
+    server: https://kubernetes.default.svc
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+
+  project: fluentd
+
+  source:
+
+    path: nginx
+
+    repoURL: https://github.com/krupakar0307/helm.git
+    
+    targetRevision: HEAD
