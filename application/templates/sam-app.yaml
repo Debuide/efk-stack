@@ -1,4 +1,4 @@
-apiVersion: argoproj.io/v1alpha1
+elasticsearch-master-0apiVersion: argoproj.io/v1alpha1
 
 kind: Application
 
@@ -6,7 +6,7 @@ metadata:
 
   name: samp
 
-  namespace: dev
+  namespace: argo
 
   finalizers:
 
@@ -16,7 +16,7 @@ spec:
 
   destination:
 
-    namespace: dev
+    namespace: argo
 
     server: https://kubernetes.default.svc
 
