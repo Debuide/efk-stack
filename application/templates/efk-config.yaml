@@ -57,7 +57,10 @@ spec:
       selfHeal: true
   project: default
   source:
-    path: charts
     repoURL: https://github.com/krupakar0307/fluentd.git
+    path: charts
     targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
 
