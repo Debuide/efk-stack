@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: argocd
+  namespace: test
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -25,7 +25,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kibana
-  namespace: argocd
+  namespace: test
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -48,7 +48,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: fluent
-  namespace: argocd
+  namespace: test
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
