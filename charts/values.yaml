@@ -9,7 +9,7 @@ kind: "DaemonSet"
 
 image:
   repository: "fluent/fluentd-kubernetes-daemonset"
-  pullPolicy: "ALways"
+  pullPolicy: "IfNotPresent"
   tag: ""
 
 ## Optional array of imagePullSecrets containing private registry credentials
@@ -345,6 +345,14 @@ fileConfigs:
         skip_container_metadata false
         skip_namespace_metadata true
         skip_master_url true
+      </filter>
+
+      <filter kubernetes.**>
+        @type concat
+        key log
+        separator ""
+        multiline_start_regexp  /Exception on / 
+        multiline_end_regexp (/error.*/ | /IndexError/)                    
       </filter>
 
       <match **>
