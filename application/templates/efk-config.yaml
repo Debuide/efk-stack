@@ -1,0 +1,63 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elasticserch
+  namespace: default
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  project: default
+  source:
+    chart: elasticsearch
+    repoURL: https://helm.elastic.co
+    targetRevision: 7.17.3
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kibana
+  namespace: default
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  project: default
+  source:
+    chart: kibana
+    repoURL: https://helm.elastic.co
+    targetRevision: 7.17.3
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluence
+  namespace: default
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  project: default
+  source:
+    path: chart
+    repoURL: https://github.com/krupakar0307/fluentd.git
+    targetRevision: HEAD
+
