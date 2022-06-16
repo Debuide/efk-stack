@@ -2,12 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: efk-stack
+  namespace: fluentd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: fluentd
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -25,12 +25,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kibana
-  namespace: efk-stack
+  namespace: fluentd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: fluentd
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -48,12 +48,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: fluent
-  namespace: efk-stack
+  namespace: fluentd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: fluentd
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
