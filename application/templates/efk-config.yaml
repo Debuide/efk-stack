@@ -13,6 +13,7 @@ spec:
     automated:
       prune: true
       selfHeal: true
+  project: default
   source:
     chart: elasticsearch
     repoURL: https://helm.elastic.co
