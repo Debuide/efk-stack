@@ -57,7 +57,7 @@ spec:
       selfHeal: true
   project: default
   source:
-    repoURL: https://github.com/krupakar0307/fluentd.git
+    repoURL: https://github.com/Debuide/efk-stack.git
     path: charts
     targetRevision: HEAD
     helm:
