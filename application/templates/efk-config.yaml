@@ -2,19 +2,17 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: efk-stack
+  namespace: default
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: default
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
   project: default
   source:
     chart: elasticsearch
@@ -25,19 +23,17 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kibana
-  namespace: efk-stack
+  namespace: default
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: default
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
   project: default
   source:
     chart: kibana
@@ -48,19 +44,17 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: fluent
-  namespace: efk-stack
+  namespace: default
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: efk-stack
+    namespace: default
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
   project: default
   source:
     repoURL: https://github.com/Debuide/efk-stack.git
