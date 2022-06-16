@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: elasticserch
-  namespace: default
+  name: elasticsearch
+  namespace: efk-stack
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: default
+    namespace: efk-stack
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -23,12 +23,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kibana
-  namespace: default
+  namespace: efk-stack
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: default
+    namespace: efk-stack
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
@@ -43,13 +43,13 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fluence
-  namespace: default
+  name: fluent
+  namespace: efk-stack
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: default
+    namespace: efk-stack
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
