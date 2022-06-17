@@ -297,99 +297,129 @@ configMapConfigs:
 ## Fluentd configurations:
 ##
 fileConfigs:
-  01_sources.conf: |-
-    ## logs from podman
-    <source>
-      @type tail
-      @id in_tail_container_logs
-      @label @KUBERNETES
-      path /var/log/containers/*.log
-      pos_file /var/log/fluentd-containers.log.pos
-      tag kubernetes.*
-      read_from_head true
-      <parse>
-        @type multi_format
-        <pattern>
-          format json
-          time_key time
-          time_type string
-          time_format "%Y-%m-%dT%H:%M:%S.%NZ"
-          keep_time_key false
-        </pattern>
-        <pattern>
-          format regexp
-          expression /^(?<time>.+) (?<stream>stdout|stderr)( (.))? (?<log>.*)$/
-          time_format '%Y-%m-%dT%H:%M:%S.%NZ'
-          keep_time_key false
-        </pattern>
-      </parse>
-      emit_unmatched_lines true
-    </source>
+        01_sources.conf: |-
+          ## logs from podman
+          <source>
+            @type tail
+            @id in_tail_container_logs
+            @label @KUBERNETES
+            path /var/log/containers/*.log
+            pos_file /var/log/fluentd-containers.log.pos
+            tag kubernetes.*
+            read_from_head true    
+            <parse>
+              @type multi_format
+              <pattern>
+                format json
+                time_key timestamp
+                keep_time_key true
+                add_newline false
+              </pattern>        
+              <pattern>
+                format regexp
+                expression /^(?<time>.+) (?<stream>stdout|stderr)( (.))? (?<log>.*)$/
+                time_format '%Y-%m-%dT%H:%M:%S.%NZ'
+                keep_time_key true
+              </pattern>
+            </parse>
+            emit_unmatched_lines true
+          </source>
 
-  02_filters.conf: |-
-    <label @KUBERNETES>
-      <match kubernetes.var.log.containers.fluentd**>
-        @type relabel
-        @label @FLUENT_LOG
-      </match>
+        02_filters.conf: |-
+          <label @KUBERNETES>
+            <match kubernetes.var.log.containers.fluentd**>
+              @type relabel
+              @label @FLUENT_LOG
+            </match>
 
-      # <match kubernetes.var.log.containers.**_kube-system_**>
-      #   @type null
-      #   @id ignore_kube_system_logs
-      # </match>
+            # <match kubernetes.var.log.containers.**_kube-system_**>
+            #   @type null
+            #   @id ignore_kube_system_logs
+            # </match>
 
-      <filter kubernetes.**>
-        @type kubernetes_metadata
-        @id filter_kube_metadata
-        skip_labels false
-        skip_container_metadata false
-        skip_namespace_metadata true
-        skip_master_url true
-      </filter>
+            <filter kubernetes.**>
+              @type kubernetes_metadata
+              @id filter_kube_metadata
+              skip_labels false
+              skip_container_metadata false
+              skip_namespace_metadata true
+              skip_master_url true
+            </filter>
 
-      <filter kubernetes.**>
-        @type concat
-        key log
-        separator ""
-        multiline_start_regexp  /Exception on / 
-        multiline_end_regexp (/error.*/ | /IndexError/)                    
-      </filter>
+            <filter kubernetes.**>
+              @type grep
+                <exclude>
+                  key log
+                  pattern /health/
+                </exclude>     
+            </filter>
 
-      <match **>
-        @type relabel
-        @label @DISPATCH
-      </match>
-    </label>
+            <filter kubernetes.**>
+              @type grep
+                <exclude>
+                  key log
+                  pattern /ping/
+                </exclude>     
+            </filter>      
 
-  03_dispatch.conf: |-
-    <label @DISPATCH>
-      <filter **>
-        @type prometheus
-        <metric>
-          name fluentd_input_status_num_records_total
-          type counter
-          desc The total number of incoming records
-          <labels>
-            tag ${tag}
-            hostname ${hostname}
-          </labels>
-        </metric>
-      </filter>
+            <filter kubernetes.**>
+              @type concat
+              key log
+              separator ""
+              multiline_start_regexp  /Exception on / 
+              multiline_end_regexp (/error.*/ | /IndexError/)                    
+            </filter>
+                     
+           <filter kubernetes.**>
+            @type parser
+            key_name log
+            <parse>
+              @type json
+              json_parser json
+            </parse>
+            replace_invalid_sequence true
+            reserve_data true # this preserves unparsable log lines
+            emit_invalid_record_to_error false # In case of unparsable log lines keep the error log clean
+            reserve_time # the time was already parsed in the source, we don't want to overwrite it with current time.
+          
+          </filter>      
 
-      <match **>
-        @type relabel
-        @label @OUTPUT
-      </match>
-    </label>
+            <match **>
+              @type relabel
+              @label @DISPATCH
+            </match>
+          </label>
 
-  04_outputs.conf: |-
-    <label @OUTPUT>
-      <match **>
-        @type elasticsearch
-        host "elasticsearch-master"
-        port 9200
-        path ""
-        user elastic
-        password changeme
-      </match>
-    </label>
+        03_dispatch.conf: |-
+          <label @DISPATCH>
+            <filter **>
+              @type prometheus
+              <metric>
+                name fluentd_input_status_num_records_total
+                type counter
+                desc The total number of incoming records
+                <labels>
+                  tag ${tag}
+                  hostname ${hostname}
+                </labels>
+              </metric>
+            </filter>
+
+            <match **>
+              @type relabel
+              @label @OUTPUT
+            </match>
+          </label>
+
+        04_outputs.conf: |-
+          <label @OUTPUT>
+            <match **>
+              @type elasticsearch
+              host "elasticsearch-master"
+              port 9200
+              path ""
+              logstash_format true
+            </match>
+          </label>
+
+   
