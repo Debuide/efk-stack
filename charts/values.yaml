@@ -367,7 +367,7 @@ fileConfigs:
               key log
               separator ""
               multiline_start_regexp  /Exception on / 
-              multiline_end_regexp (/error.*/ | /IndexError/)                    
+              multiline_end_regexp /error.*/                    
             </filter>
                      
            <filter kubernetes.**>
