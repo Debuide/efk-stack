@@ -26,7 +26,7 @@ spec:
       selfHeal: true
 
 
-  project: fluentd
+  project: default
 
   source:
 
