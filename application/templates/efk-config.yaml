@@ -13,6 +13,8 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
   project: default
   source:
     chart: elasticsearch
@@ -34,6 +36,8 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
   project: default
   source:
     chart: kibana
@@ -55,6 +59,8 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
   project: default
   source:
     repoURL: git@github.com:Debuide/efk-stack.git
