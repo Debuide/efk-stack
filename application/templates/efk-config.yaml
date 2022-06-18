@@ -17,7 +17,7 @@ spec:
     - CreateNamespace=true
   project: default
   source:
-  repoURL: https://fluent.github.io/helm-charts
+  repoURL: git@github.com:Debuide/efk-stack.git
   chart: fluentd
   targetRevision: 0.3.7
   helm:
