@@ -1,11 +1,12 @@
-# EFK Helm Charts
+# EFK Stack by DEBUIDE TECHNOLOGIES
 
 ## Usage
+EFK Stack setup by ArgoCD :-
+Open ArgoCD UI, Create a new application then provide required inputs in the fields such as name of an application, sync policy and configure repository url to this github repo. If the repository is private make sure to connect via ssh or http otherwise will tends to authentication error.
 
-[Helm](https://helm.sh) must be installed to use the charts.
-Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
+After configuring required fields, applications will get start syncronizing and deploying.
 
-Once Helm is set up properly, add the repo as follows:
+##By Default ArgoCD sync time will be 3 Minutes and Sync retries upto 5 times(If anything goes wrong)
 
 
 ## Contributing
