@@ -90,6 +90,7 @@ spec:
           configMap:
             name: fluentd-config
             defaultMode: 0777
+
         volumeMounts:
         - name: varlog
           mountPath: /var/log
@@ -100,6 +101,7 @@ spec:
           mountPath: /etc/fluent
         - name: etcfluentd-config
           mountPath: /etc/fluent/config.d/
+
         fileConfigs:
           01_sources.conf: |-
             ## logs from podman
@@ -128,16 +130,19 @@ spec:
               </parse>
               emit_unmatched_lines true
             </source>
+
           02_filters.conf: |-
             <label @KUBERNETES>
               <match kubernetes.var.log.containers.fluentd**>
                 @type relabel
                 @label @FLUENT_LOG
               </match>
+
               # <match kubernetes.var.log.containers.**_kube-system_**>
               #   @type null
               #   @id ignore_kube_system_logs
               # </match>
+
               <filter kubernetes.**>
                 @type kubernetes_metadata
                 @id filter_kube_metadata
@@ -162,6 +167,7 @@ spec:
                     pattern /ping/
                   </exclude>     
               </filter>      
+
               <filter kubernetes.**>
                 @type concat
                 key log
@@ -188,6 +194,7 @@ spec:
                 @label @DISPATCH
               </match>
             </label>
+
           03_dispatch.conf: |-
             <label @DISPATCH>
               <filter **>
@@ -202,11 +209,13 @@ spec:
                   </labels>
                 </metric>
               </filter>
+
               <match **>
                 @type relabel
                 @label @OUTPUT
               </match>
             </label>
+
           04_outputs.conf: |-
             <label @OUTPUT>
               <match **>
@@ -217,6 +226,7 @@ spec:
                 logstash_format true
               </match>
             </label>
+
                 #       @type multiline
                 # <pattern>
                 #   format_firstline /^[a-z]*Some logs are very big/
