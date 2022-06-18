@@ -1,3 +1,3 @@
 apiVersion: v2
-name: apps-dev
+name: apps
 description: A Helm chart for Kubernetes
