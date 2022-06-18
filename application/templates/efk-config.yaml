@@ -22,7 +22,7 @@ spec:
     targetRevision: 0.3.7
     helm:
     valueFiles:
-      - values-prod.yaml
+      - values.yaml
     values: |
         - name: varlog
           hostPath:
