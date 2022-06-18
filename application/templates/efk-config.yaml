@@ -21,7 +21,9 @@ spec:
     chart: fluentd
     targetRevision: 0.3.7
     helm:
-    - values: |
+    valueFiles:
+      - values-prod.yaml
+    values: |
         - name: varlog
           hostPath:
             path: /var/log
