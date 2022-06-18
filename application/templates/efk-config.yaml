@@ -21,7 +21,7 @@ spec:
   chart: fluentd
   targetRevision: 0.3.7
   helm:
-    values: |-
+    values: |
       volumes:
       - name: varlog
         hostPath:
