@@ -19,7 +19,7 @@ spec:
   source:
     chart: fluentd
     repoURL: https://fluent.github.io/helm-charts
-    targetRevision: 0.3.7
+    targetRevision: 0.3.6
     helm:
       values: |
         volumes:
