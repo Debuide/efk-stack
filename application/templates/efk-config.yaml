@@ -63,9 +63,9 @@ spec:
     - CreateNamespace=true
   project: default
   source:
-    repoURL: git@github.com:Debuide/efk-stack.git
-    path: charts
-    targetRevision: HEAD
+    repoURL: https://fluent.github.io/helm-charts
+    chart: fluentd
+    targetRevision: 0.3.7
     values: |
       - name: varlog
         hostPath:
