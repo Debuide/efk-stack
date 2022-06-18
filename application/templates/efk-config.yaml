@@ -20,7 +20,7 @@ spec:
     repoURL: https://fluent.github.io/helm-charts
     chart: fluentd
     targetRevision: 0.3.7
-    values: |
+    value: |
       - name: varlog
         hostPath:
           path: /var/log
