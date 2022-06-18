@@ -1,52 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: elasticsearch
-  namespace: default
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
-  project: default
-  source:
-    chart: elasticsearch
-    repoURL: https://helm.elastic.co
-    targetRevision: 7.16.3
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: kibana
-  namespace: default
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
-  project: default
-  source:
-    chart: kibana
-    repoURL: https://helm.elastic.co
-    targetRevision: 7.16.3
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: fluent
   namespace: default
   finalizers:
@@ -67,7 +21,7 @@ spec:
     chart: fluentd
     targetRevision: 0.3.7
     helm:
-      values: |
+    - values: |
         - name: varlog
           hostPath:
             path: /var/log
