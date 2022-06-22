@@ -101,7 +101,6 @@ spec:
           mountPath: /etc/fluent
         - name: etcfluentd-config
           mountPath: /etc/fluent/config.d/
-
         fileConfigs:
           01_sources.conf: |-
             ## logs from podman
@@ -111,6 +110,7 @@ spec:
               @label @KUBERNETES
               path /var/log/containers/*.log
               pos_file /var/log/fluentd-containers.log.pos
+              exclude_path ["/var/log/containers/fluent*"]
               tag kubernetes.*
               read_from_head true    
               <parse>
@@ -156,27 +156,50 @@ spec:
                 @type grep
                   <exclude>
                     key log
-                    pattern /GET\ \/ HTTP\/1\.1/
-                  </exclude>     
+                    pattern /excluded/
+                  </exclude>
+                  <inject>
+                    time_key fluentd_time
+                    time_type string
+                    time_format %Y-%m-%dT%H:%M:%S.%NZ
+                    tag_key fluentd_tag
+                  </inject>          
               </filter>
-
-              <filter kubernetes.**>
-                @type grep
-                  <exclude>
-                    key log
-                    pattern /ping/
-                  </exclude>     
-              </filter>      
 
               <filter kubernetes.**>
                 @type concat
                 key log
                 separator ""
-                multiline_start_regexp  /Exception on /
-                multiline_end_regexp /error.*/
+                # n_lines 10
+                multiline_start_regexp  /ERROR:app:Exception on \/custom-exception/
+                multiline_end_regexp /error.ValueTooSmallError/
+                #continuous_line_regexp nil
+                #stream_identity_key nil
+                #flush_interval 60
+                #timeout_label nil
+                #use_first_timestamp false
+                #partial_key nil
+                #partial_value nil
+                #keep_partial_key false
+                #use_partial_metadata false
+                #keep_partial_metadata false
+                #partial\_metadata\_format docker-fluentd
+                #use\_partial\_cri\_logtag false
+                #partial\_cri\_logtag\_key nil
+                #partial\_cri\_stream\_key stream
               </filter>
-
-             <filter kubernetes.**>
+              <filter kubernetes.**>
+                @type parser
+                key_name log
+                reserve_data true
+                replace_invalid_sequence false
+                emit_invalid_record_to_error false
+                <parse>
+                  @type regexp
+                  expression /Some logs are very (?<sizeOfLogs>[^ ]*)[a-zA-z\n ]*/
+                </parse>
+              </filter>
+            <filter kubernetes.**>
               @type parser
               key_name log
               <parse>
@@ -187,8 +210,8 @@ spec:
               reserve_data true # this preserves unparsable log lines
               emit_invalid_record_to_error false # In case of unparsable log lines keep the error log clean
               reserve_time # the time was already parsed in the source, we don't want to overwrite it with current time.
+            </filter>
 
-            </filter>      
               <match **>
                 @type relabel
                 @label @DISPATCH
@@ -232,4 +255,5 @@ spec:
                 #   format_firstline /^[a-z]*Some logs are very big/
                 #   format1 /^[a-z]*Some (?<entity>) are very big in nature and hence/
                 # <pattern>
+
                 # [0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [0-9]+\.[0-9]{2}\.[0-9]+ INFO 1080 no expectation for:
